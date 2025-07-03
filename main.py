@@ -1,11 +1,27 @@
-import requests
-from bs4 import BeautifulSoup
-import smtplib
-from email.message import EmailMessage
-import schedule
-import time
-from datetime import datetime
+from flask import Flask, jsonify
+import threading
 
+# Create a simple Flask app for health checks
+app = Flask(__name__)
+
+@app.route('/')
+def health_check():
+    return jsonify({"status": "active", "service": "K3 Prediction System"})
+
+def run_flask_app():
+    port = int(os.environ.get("PORT", 5000))  # Render का PORT या डिफ़ॉल्ट 5000
+    app.run(host='0.0.0.0', port=port)
+
+if __name__ == "__main__":
+    # Start Flask app in a separate thread
+    flask_thread = threading.Thread(target=run_flask_app)
+    flask_thread.daemon = True
+    flask_thread.start()
+
+    print("K3 Prediction System Started")
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 # Configuration
 GMAIL_USER = "vanshikakanwar243@gmail.com"
 GMAIL_APP_PASSWORD = "unwj tacr orhk icgc"
